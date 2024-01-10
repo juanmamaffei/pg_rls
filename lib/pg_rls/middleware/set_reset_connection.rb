@@ -80,7 +80,8 @@ module PgRls
         return if tenant_session.blank?
         return if tenant_session['_tenant'].blank?
 
-        tenant_session['_tenant'] if tenant_session.present?
+        GlobalID::Locator.locate(tenant_session['_tenant']) if tenant_session['_tenant'].present?
+
       rescue TypeError
         nil
       end

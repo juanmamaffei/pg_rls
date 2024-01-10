@@ -17,11 +17,11 @@ module PgRls
     private
 
     def switch_tenant!
-      fetched_tenant = session[:_tenant] || current_tenant
+      fetched_tenant = GlobalID::Locator.locate(session[:_tenant]) || current_tenant
       return yield if PgRls::Tenant.fetch.present?
 
       Tenant.with_tenant!(fetched_tenant) do |tenant|
-        session[:_tenant] = tenant
+        session[:_tenant] = tenant.to_global_id.to_s
         yield(tenant)
       end
     rescue NoMethodError
